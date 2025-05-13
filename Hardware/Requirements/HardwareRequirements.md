@@ -76,7 +76,7 @@ To meet the above requirements, the following components have been selected.
 :scroll: If possible, get one /w a true random number generator (TRNG).   
 :scroll: Based on the general I/O requirements, we're looking at a < 48 pin count unit   
 :scroll: Ideally, there would also be support for USB for easy re-programming / debugging   
-:scroll: Amazingly, the Arm® Cortex®-M0+ MCUs out-perform the 8-bit and 16-bit low power MCUs (e.g., STM8L, MSP430FR2x) variants when it comes to ultra-low-power performance!   
+:scroll: Arm® Cortex®-M0+ MCUs out-perform 8-bit / 16-bit low power MCUs (e.g., STM8L, MSP430FR2x) in ultra-low-power performance!😲   
 
 1. STM32U031R8
    - ST Webpage: [STM32U031R8: Ultra-low-power Arm® Cortex®-M0+ MCU with 64 Kbytes of Flash memory, 56 MHz CPU](https://www.st.com/en/microcontrollers-microprocessors/stm32u031r8.html)

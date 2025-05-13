@@ -10,17 +10,15 @@ In addition to the terminology introduced by the [System Requirements document](
 1. **Height**: Looking at the face of the device with the screen, the height is the vertical dimension
 1. **Width**: Looking at the face of the device with the screen, the width is the horizontal dimension
 1. **Depth**: How high the device comes off a flat surface if the face of the device with the screen is facing up
-1. **Max Frequency**: Maximum Frequency specified in `SYS_FUNC_TBD`
-1. **Rated Frequency Range**: 0Hz to the Max Frequency specified in `SYS_FUNC_TBD`
 1. **Unwanted Signal Overlay**: Any signal on top of the ideal square waveform that is undersired (noise, ripple)
 1. **Device Efficiency**: The ratio between the power to a 100Ω load and the power supplied by the device's battery, expressed as a percentage %
 1. **Worst-Case Device Efficiency**: The device efficiency under conditions that cause maximum losses (conditions TBD)
 
 ## Requirements
 1. `HRD_01`: The device shall be within ± 10% of these dimensions:
-   - Height: 76mm  
-   - Width: 100mm  
-   - Depth: 30mm  
+   - Height: TODO
+   - Width: TODO  
+   - Depth: TODO  
 1. `HRD_02`: The device's output shall be single-ended.
 1. `HRD_03`: (FUTURE) Differential outputs shall be supported.
 1. `HRD_04`: To fulfill `UI_TBD`, the following shall be the output ports for this device:
@@ -56,38 +54,17 @@ In addition to the terminology introduced by the [System Requirements document](
 ## Physical I/O
 ### Inputs
 #### Analog
-1. `AIN_SETPOT`: Analog input for the SetPot
-1. `AIN_SCREEN_KNOB`: Analog input for the screen knob
-1. `AIN_DIAG_FRQ_OUT`: Diagnostic analog input to independently measure the output signal and confirm that it is within spec
-1. `AIN_DIAG_FRQ_OUT_CURRENT`: Diagnostic analog input to measure the output current and detect overcurrents
 1. `AIN_BAT`: Main battery supply's voltage
 1. `AIN_COIN_CELL`: Coin cell's voltage
 
 #### Digital
-1. `DIN_SETPOINT_MODE`: Digital input to set the setpoint mode
-1. `DIN_VOLT_SET_MODE`: Digital input to set the voltage setpoint mode
-1. `DIN_COARSENESS_SW`: Digital input to set the coarseness of the SetPot
-1. `DIN_OUT_EN_SW`: Digital input switch to enable/disable the output
-1. `DIN_DIAG_FRQ_OUT`: Diagnostic digital input to independently measure the output signal and confirm that it is within spec (to be used as a PWM input)
-1. `DIN_DIAG_UI_SETPOT_FRQ_LED`: Diagnostic digital input for the LED that indicates frequency is the active setpoint mode
-1. `DIN_DIAG_UI_SETPOT_HPT_LED`: Diagnostic digital input for the LED that indicates high pulse time is the active setpoint mode
-1. `DIN_DIAG_UI_COARSE_LED`: Diagnostic digital input for the LED that indicates coarse mode is active
-1. `DIN_DIAG_UI_FINE_LED`: Diagnostic digital input for the LED that indicates fine mode is active
-1. `DIN_DIAG_LED_OUT_EN`: Diagnostic digital input for the green LED that indicates the output is active
-1. `DIN_DIAG_LED_GREEN`: Diagnostic digital input for the green LED that indicates no fault is active
-1. `DIN_DIAG_LED_AMBER`: Diagnostic digital input for the amber LED that indicates a mild fault is active
-1. `DIN_DIAG_LED_RED`: Diagnostic digital input for the red LED that indicates a catastrophic fault is active
+1. `DIN_GENERATE_RN`: Trigger the generation of a random number
+1. `DIN_EN_DISABLE_DIGIT1`: Enable/disable digit 1 (left-most digit)
+1. `DIN_EN_DISABLE_DIGIT2`: Enable/disable digit 2 (middle digit)
+1. `DIN_EN_DISABLE_DIGIT3`: Enable/disable digit 3 (right-most digit)
 
 ### Outputs
-1. `FRQ_OUT`: The star of the show! Output signal with two voltage levels
-1. `OUT_EN`: Enable/disable the output, which will include the enable LED, output regulators / analog switches, and any other applicable device involved in enabling/disabling the output
-1. `UI_SETPOT_FRQ_LED`: Digital output for the UI LED that represents frequency setpoint mode
-1. `UI_SETPOT_HPT_LED`: Digital output for the UI LED that represents HPT setpoint mode
-1. `UI_COARSE_LED`: Digital output for the coarse LED
-1. `UI_FINE_LED`: Digital output for the fine LED
-1. `DIAG_LED_GREEN`: Digital output for the diagnostic green LED
-1. `DIAG_LED_AMBER`: Digital output for the diagnostic amber LED
-1. `DIAG_LED_RED`: Digital output for the diagnostic red LED
+TODO
 
 ## Component Selection
 To meet the above requirements, the following components have been selected.
@@ -96,47 +73,32 @@ To meet the above requirements, the following components have been selected.
 #### MCU
 :scroll: Different MCUs will be supported in order to diversify this critical component.   
 :scroll: Furthermore, low-power MCUs are prioritized.   
-:scroll: If possible, get one /w a floating-point unit.   
-:scroll: Based on the general I/O requirements, we're looking at a ≥ 48 pin count unit that at _minimum_ supports SPI/I2C (most µC out there).   
-:scroll: Ideally, there would also be support for CAN/USB for the future, but that may be asking for too much...   
+:scroll: If possible, get one /w a true random number generator (TRNG).   
+:scroll: Based on the general I/O requirements, we're looking at a < 48 pin count unit
+:scroll: Ideally, there would also be support for USB for easy re-programming / debugging
 :scroll: Amazingly, the Arm® Cortex®-M0+ MCUs out-perform the 8-bit and 16-bit low power MCUs (e.g., STM8L, MSP430FR2x) variants when it comes to ultra-low-power performance!
 
 1. STM32U031R8
    - ST Webpage: [STM32U031R8: Ultra-low-power Arm® Cortex®-M0+ MCU with 64 Kbytes of Flash memory, 56 MHz CPU](https://www.st.com/en/microcontrollers-microprocessors/stm32u031r8.html)
    - Digi-Key: [497-STM32U031R8T6-ND](https://www.digikey.com/en/products/detail/stmicroelectronics/STM32U031R8T6/22337319)
 
-1. MSPM0L1227
-   - TI Webpage: [MSPM0L1227: 32MHz Arm® Cortex®-M0+ MCU with 128KB dual-bank flash, 32KB SRAM, 12-bit ADC, COMP, VBAT, PSA-L1<](https://www.ti.com/product/MSPM0L1227)
-   - DigiKey: [296-MSPM0L1227SPMRCT-ND](https://www.digikey.com/en/products/detail/texas-instruments/MSPM0L1227SPMR/25619050?0=%2Fmicrocontrollers&any=embedded&s=N4IgjCBcoLQExVAYygFwE4FcCmAaEA9lANogCsIAugL7X4KSkCyAygApMAMAMmHHAHYq1IA)
-
 1. R7F102GGC2DFB (RL78/G22 Family)
    - Renesas Webpage: [RL78/G22: General-Purpose Microcontrollers with Excellent Low-Power Performance and Rich Capacitive Touch Channels](https://www.renesas.com/en/products/microcontrollers-microprocessors/rl78-low-power-8-16-bit-mcus/rl78g22-general-purpose-microcontrollers-excellent-low-power-performance-and-rich-capacitive-touch-channels)
    - Digi-Key: [559-R7F102GGC2DFB#AA0-ND](https://www.digikey.com/en/products/detail/renesas-electronics-corporation/R7F102GGC2DFB-AA0/19241771)
 
-1. EFM32PG23B210F64IM48-C (Silicon Labs EFM32 PG23 Family)
-   - Silicon Labs Webpage: [EFM32PG23B210F64IM48: EFM32PG23 Series 2 MCUs](https://www.silabs.com/mcu/32-bit-microcontrollers/efm32pg23-series-2/device.efm32pg23b210f64im48?tab=techdocs)
-   - Digi-Key: [336-EFM32PG23B210F64IM48-C-ND](https://www.digikey.com/en/products/detail/silicon-labs/EFM32PG23B210F64IM48-C/16396764)
+1. CH32V203 - RISC-V (WCH)
+   - WCH Webpage: [32-bit Enhanced Low-Power RISC-V MCU – CH32V203](https://www.wch-ic.com/products/CH32V203.html)
+   - Digi-Key: Closest thing is this breakout board: [1528-5996-ND](https://www.digikey.com/en/products/detail/adafruit-industries-llc/5996/24713464)
 
-#### DAC
-:scroll: Different DACs will be supported in order to diversify this critical component.
-:scroll: ≤ 500 µA /w inactive comms bus
-
-1. Analog Devices AD5622BKSZ-2REEL7
-   - AD Webpage: [AD5622: 2.7 V to 5.5 V, <100 µA, 12-Bit nanoDAC® with I2C Compatible Interface, Tiny SC70 Package](https://www.analog.com/en/products/ad5622.html)
-   - DigiKey: [505-AD5622BKSZ-2REEL7CT-ND](https://www.digikey.com/en/products/detail/analog-devices-inc/AD5622BKSZ-2REEL7/995859)
-
-1. MCP47CMD21
-   - Microchip Webpage: [MCP47CMD21: 12-Bit Single Output DAC w/MTP and I2C™](https://www.microchip.com/en-us/product/mcp47cmd21)
-   - DigiKey: [150-MCP47CMD21T-E/MFCT-ND](https://www.digikey.com/en/products/detail/microchip-technology/MCP47CMD21T-E-MF/16709763)
-
-#### Display
-:scroll: Definitely needs to have ≥ 100 x 100 px to support the various screens.   
-:scroll: It's going to need to be low-power, which means **no backlight** :no_entry_sign::bulb:   
-Crystalfontz [CFAG240128U0-NFH Low Power 240x128 Graphic LCD Display](https://www.crystalfontz.com/product/cfag240128u0nfh-low-power-240x128-graphic-lcd)
+#### Digits
+AlfaZeta's [S7S Displays](https://flipdots.com/en/products-services/small-7-segment-displays/). They're the inspiration for project!
 
 ### Device Enclosure
+- Should be an aluminum frame.
+- The digits should be ≥ 60% of the front area of the product and ≥ 80% of the depth
 3D model, material, and fabrication details coming soon...
+
 See the general sketch of the front face of the device below:   
    
-![FSE Device Sketch drawio](https://github.com/user-attachments/assets/d2e239ff-ba75-486b-832b-5c3469d33ba1)
+TODO
 

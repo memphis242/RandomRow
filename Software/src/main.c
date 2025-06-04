@@ -8,16 +8,23 @@
  */
 
 /* File Inclusions */
-#include "main_config.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include <assert.h>
-#include "ascii7seg.h"
-#include "ascii7seg_config.h"
+
+#include "main_config.h"
 #include "mcu_hal.h"
-#include "set.h"
+#include "rng.h"
+#include "rntracker.h"
+#include "display.h"
+#include "inputdriver.h"
+#include "outputdriver.h"
+#include "nvm.h"
+#include "diagnostics.h"
+#include "generic_timer.h"
 
 /* Local Macro Definitions */
+#define MAX_INIT_ATTEMPTS UINT8_MAX
 
 // Constant-like macros
 
@@ -36,27 +43,38 @@ int main(void)
    // Hardware
    MCU_Init();
    RNG_Init();
-   Display_Init();
-   InputDriver_Init();
+   Display_HardwareInit();
+   InputDriver_HardwareInit();
    UXButton_Init();
    OutputDriver_Init();
    NVM_Init();
+
    // Software
    Diagniostics_Init();
+
    RandomNumberTracker_Init();
    uint16_t min = RandomNumberTracker_RangeGetMin();
    uint16_t max = RandomNumberTracker_RangeGetMax();
    RNG_SetRange(min, max);
 
-   /* Local Persistent Data */
-   static Timer_T rng_debounce_timer;
-   static Timer_T go_to_sleep_timer;
-   Timer_Init(&rng_debounce_timer, Timer_ms, UINT16_MAX);
-   Timer_Init(&go_to_sleep_timer,  Timer_ms, UINT16_MAX);
+   static Timer_T Timer_RNGDebounce;
+   static Timer_T Timer_GoToSleep;
+   // Initialize local timers
+   Timer_Init( &Timer_RNGDebounce, Timer_ms, UINT16_MAX );
+   Timer_Init( &Timer_GoToSleep,   Timer_ms, UINT16_MAX );
 
-   static uint16_t random_num = 0;
-   static bool new_num_generated = false;
-   static bool state_entry = true;
+   Input_T knob;
+   InputDriver_Init( &knob,
+                     InputDriver_Category_Analog,
+                     InputDriver_Unit_Percent,
+                     KNOB_PORT );
+
+   /* Local Persistent Data */
+   static bool NewNumGenerated = false;
+
+   /* Local Auto-Data */
+   /* (basically persistent though, because we'll be in the while(1) inf loop) */
+   uint16_t random_num = 0;
 
    static enum MainFSM_E
    {
@@ -66,7 +84,8 @@ int main(void)
       StoreRandomNumber,
       ReconfigureRandomNumberRange,
       Idle,
-      Sleep
+      Sleep,
+      SevereFault
    } MainFSM = Init;
 
    /* Core Logic */
@@ -78,92 +97,163 @@ int main(void)
          MainFSM = Idle;
       }
 
+      // Calling UXButton_ButtonHasBeenPressed() will reset the associated flag
+      // within the UXButton module. This is an intentional design pattern that
+      // better suits the superloop design.
+      // So, to properly use this, the return value is stored and used as needed.
+      bool button_pressed = UXButton_ButtonHasBeenPressed();
+
       switch(MainFSM)
       {
          /*********************************************************************/
          case Init:
          
             random_num = RandomNumberTracker_GetMostRecentNum();
-            new_num_generated = true;
             MainFSM = DisplayRandomNumber;
 
             break;
 
          /*********************************************************************/
          case GenerateRandomNumber:
-            rng_debounce_timer = 0;
-            do
-            {
-               random_num = RNG_GetRandomNum();
-            } while ( RandomNumberTracker_AlreadyUsed(random_num) );
-            new_num_generated = true;
+
+            Timer_RNGDebounce = 0;
+            do { random_num = RNG_GetRandomNum(); }
+            while ( RandomNumberTracker_AlreadyUsed(random_num) );
+            NewNumGenerated = true;
             MainFSM = DisplayRandomNumber;
 
             break;
 
          /*********************************************************************/
          case DisplayRandomNumber:
-            // TODO
-            if ( state_entry )
-            {
-               // On-entry...
-            }
+         {
+            // Local case-scope variables
+            static bool StatePreviouslyExited_DisplayRandomNumber = true;
 
-            // when done...
-            if ( false /* TODO */ )
+            if ( StatePreviouslyExited_DisplayRandomNumber )
             {
-               MainFSM = StoreRandomNumber;
+               // On-entry-only statements
+               Display_Num(random_num);
+               StatePreviouslyExited_StoreRandomNumber = false;
+            }
+            else
+            {
+               if ( Display_Complete() )
+               {
+                  MainFSM = NewNumGenerated ? StoreRandomNumber : Idle;
+                  StatePreviouslyExited_DisplayRandomNumber = true;
+               }
             }
 
             break;
+         }
 
          /*********************************************************************/
          case StoreRandomNumber:
-            assert( new_num_generated );
+         {
+            // Local case-scope variables
+            static bool StatePreviouslyExited_StoreRandomNumber = true;
 
-            if ( state_entry )
+            assert( NewNumGenerated );
+
+            if ( StatePreviouslyExited_StoreRandomNumber )
             {
-               state_entry = false; // FIXME: State entry var pattern
-               RandomNumberTracker_Store(num);
+               RandomNumberTracker_Store(random_num);
+               StatePreviouslyExited_StoreRandomNumber = false;
             }
-            // TODO
-
-            // when done...
-            if ( false /* TODO */ )
+            else
             {
-               new_num_generated = false;
-               MainFSM = Idle;
+               if ( RandomNumberTracker_StoreComplete() )
+               {
+                  NewNumGenerated = false;
+                  MainFSM = Idle;
+                  StatePreviouslyExited_StoreRandomNumber = true;
+               }
             }
 
             break;
+         }
 
          /*********************************************************************/
          case ReconfigureRandomNumberRange:
-            // TODO
+         {
+            static bool FirstStep = true;
+            static uint8_t new_min = 0;
+            static uint8_t new_max = DISPLAY_MAX_NUM;
+            static bool max_valid = false;
+
+            uint16_t num_selection =
+               (uint16_t)(InputDriver_GetPercent(&knob) * 100.0f) *
+               DISPLAY_MAX_NUM;
+            Display_Num(num_selection);
+
+            if ( FirstStep && button_pressed )
+            {
+               new_min = num_selection;
+               RNG_SetMin(new_min);
+               FirstStep = false;
+            }
+            else if ( !FirstStep && !max_valid && button_pressed )
+            {
+               if ( num_selection >= new_min )
+               {
+                  new_max = num_selection;
+                  max_valid = true;
+                  RNG_SetMax(new_max);
+               }
+               else
+               {
+                  max_valid = false;
+                  Display_String("ERR");
+               }
+               FirstStep = true;
+               MainFSM = Idle;
+            }
+            else
+            {
+               // Continue waiting in this state...
+            }
+
+            break;
+         }
+
+         /*********************************************************************/
+         case Sleep:
+
+            if ( WakeUpActive() )
+            {
+               MainFSM = Idle;
+            }
+            else
+            {
+               // The idea right now here is Sleep() puts the MCU to sleep for a
+               // few seconds, let it wake itself up, execute an iteration of
+               // the main loop, and end up back here again if no wakeup is
+               // active.
+               Sleep(SLEEP_CYCLE_TIME);
+            }
 
             break;
 
          /*********************************************************************/
-         case Sleep:
-            // TODO
-            if ( WakeUp() )
+         case SevereFault:
+
+            Display("ERR"); // Will also fail if the fault is in the display drive
+
+            if ( !Diagnostics_SevereFaultPresent() )
             {
                MainFSM = Idle;
             }
-
+            
             break;
 
          /*********************************************************************/
          case Idle:
             // Fallthrough
          default:
-            if ( Diagnostics_SevereFaultPresent() )
-            {
-               // TODO
-               // Display "ERR" if possible
-            }
-            else if ( !UXButton_Held() && UXButton_ButtonHasBeenPressed() &&
-                      (Timer_GetTime(&rng_deboucne_timer) >= RERUN_RNG_DEBOUNCE_TIME) )
+
+            if ( !UXButton_Held() && button_pressed &&
+                 (Timer_GetTime(&Timer_RNGDebounce) >= RERUN_RNG_DEBOUNCE_TIME) )
             {
                MainFSM = GenerateRandomNumber;
             }
@@ -173,8 +263,8 @@ int main(void)
             }
             else
             {
-               Timer_Increment(&go_to_sleep_timer);
-               if ( Timer_GetTime(&go_to_sleep_timer) >= GO_TO_SLEEP_WAIT_TIME )
+               Timer_Increment(&Timer_GoToSleep);
+               if ( Timer_GetTime(&Timer_GoToSleep) >= GO_TO_SLEEP_WAIT_TIME )
                {
                   MainFSM = Sleep;
                }
@@ -183,7 +273,11 @@ int main(void)
             break;
       }
 
-      Timer_Increment(&rng_debounce_timer);
+      Timer_Increment(&Timer_RNGDebounce);
+
+#ifdef DESKTOP_ENV
+      // TODO: Exit while(1) infinite loop
+#endif
    }
 
 	return 0;

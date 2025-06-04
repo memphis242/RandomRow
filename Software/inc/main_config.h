@@ -18,5 +18,8 @@
 
 #define RERUN_RNG_DEBOUNCE_TIME  5000 // ms
 #define GO_TO_SLEEP_WAIT_TIME    1000 // ms
+#define SLEEP_CYCLE_TIME         1000 // ms
+
+#define KNOB_PORT TODO
 
 #endif // MAIN_CFG_H_

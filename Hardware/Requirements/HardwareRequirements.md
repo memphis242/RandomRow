@@ -72,15 +72,24 @@ To meet the above requirements, the following components have been selected.
 ### Electronic
 #### MCU
 :scroll: Different MCUs will be supported in order to diversify this critical component.   
-:scroll: Furthermore, low-power MCUs are prioritized.   
-:scroll: If possible, get one /w a true random number generator (TRNG).   
+:scroll: Low-power MCUs are prioritized.   
 :scroll: Based on the general I/O requirements, we're looking at a < 48 pin count unit   
-:scroll: Ideally, there would also be support for USB for easy re-programming / debugging   
 :scroll: Arm® Cortex®-M0+ MCUs out-perform 8-bit / 16-bit low power MCUs (e.g., STM8L, MSP430FR2x) in ultra-low-power performance!😲   
 
 1. STM32U031R8
    - ST Webpage: [STM32U031R8: Ultra-low-power Arm® Cortex®-M0+ MCU with 64 Kbytes of Flash memory, 56 MHz CPU](https://www.st.com/en/microcontrollers-microprocessors/stm32u031r8.html)
    - Digi-Key: [497-STM32U031R8T6-ND](https://www.digikey.com/en/products/detail/stmicroelectronics/STM32U031R8T6/22337319)
+   - Vendor Dev Board:
+      - ST: [NUCLEO-U031R8](https://www.st.com/en/evaluation-tools/nucleo-u031r8.html)
+      - Digi-Key: [497-NUCLEO-U031R8-ND](https://www.digikey.com/en/products/detail/stmicroelectronics/NUCLEO-U031R8/22470455)
+
+1. MSP430FR2355
+   - The 32-bit MCUs actually beat this one power-wise, but I wanted an 8/16-bit MCU in the mix
+   - TI Webpage: [MSP430FR2355: 24-MHz 105-C integrated analog microcontroller with 32-KB FRAM, Op-Amps/PGAs, 12-bit DACs, 12-bit AD](https://www.ti.com/product/MSP430FR2355)
+   - Digi-Key: [296-50260-ND](https://www.digikey.com/en/products/detail/texas-instruments/MSP430FR2355TPT/9597611)
+   - Vendor Dev Board:
+      - TI: [MSP-EXP430FR2355: MSP430FR2355 LaunchPad™ development kit](https://www.ti.com/tool/MSP-EXP430FR2355)
+      - Digi-Key: [296-50211-ND](https://www.digikey.com/en/products/detail/texas-instruments/MSP-EXP430FR2355/9491427)
 
 1. R7F102GGC2DFB (RL78/G22 Family)
    - Renesas Webpage: [RL78/G22: General-Purpose Microcontrollers with Excellent Low-Power Performance and Rich Capacitive Touch Channels](https://www.renesas.com/en/products/microcontrollers-microprocessors/rl78-low-power-8-16-bit-mcus/rl78g22-general-purpose-microcontrollers-excellent-low-power-performance-and-rich-capacitive-touch-channels)

@@ -102,6 +102,10 @@ To meet the above requirements, the following components have been selected.
 #### Digits
 AlfaZeta's [S7S Displays](https://flipdots.com/en/products-services/small-7-segment-displays/). They're the inspiration for project!
 
+#### Power Supply
+For the AlfaZeta S7S displays,
+1. [TI LM51581](https://www.ti.com/product/LM51581)
+
 ### Device Enclosure
 - Should be an aluminum frame.
 - The digits should be ≥ 60% of the front area of the product and ≥ 80% of the depth

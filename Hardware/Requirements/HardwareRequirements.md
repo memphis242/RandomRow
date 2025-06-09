@@ -103,8 +103,11 @@ To meet the above requirements, the following components have been selected.
 AlfaZeta's [S7S Displays](https://flipdots.com/en/products-services/small-7-segment-displays/). They're the inspiration for project!
 
 #### Power Supply
-For the AlfaZeta S7S displays,
-1. [TI LM51581](https://www.ti.com/product/LM51581)
+According to the S7S datasheet, each solenoid segment of the display will require a 19V 1ms pulse (/w ≥ 900ms recovery time) to drive 335mA through and get the necessary magnetic reversal effect. Given that, here are the options:
+1. [TI LM5158](https://www.ti.com/product/LM5158)   
+   - The S7S display /w controller that I got uses an [MC34063A](https://www.ti.com/product/MC34063A) switching regulator (1.5A boost/buck/inverting), which takes as input 3-40V and can output 1.25-40V and up to 1.5A.   
+   - On the product page of the MC34063A, TI recommended a newer version of the product /w the asme functionality and better performance - the LM51581. This upgrade has a wider input and output voltage range (1.5-60V and 2-83V respectively), features an enable pin, has far less quiescent current (670µA instead of 4000µA), wider temperature range, max duty cycle, bandwidth, and much more. Genuinely an upgrade as far as I can tell.
+   - The LM5158 is the higher current version of the LM51581, /w an integrated power switch that can tolerate 3.26A instead of just 1.63A.
 
 ### Device Enclosure
 - Should be an aluminum frame.

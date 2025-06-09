@@ -1,0 +1,17 @@
+﻿Part,Manufacturer,Part Number,Quantity,Price ($),Footprint (mm²),Description
+Rt,Vishay-Dale,CRCW04029K76FKED,1,0.01,3,Resistance: 9.76 kΩ  Tolerance: 1.0%  Power: 63 mW  
+Ccomp,MuRata,GRM155R71A273KA01D,1,0.01,3,Cap: 27 nF  Total Derated Cap: 27 nF  VDC: 10 V  ESR: 1 mΩ  Package: 0402  
+Cin,MuRata,GRM188R71A225KE15D,1,0.02,4.68,Cap: 2.2 µF  Total Derated Cap: 1.8 µF  VDC: 10 V  ESR: 9 mΩ  Package: 0603  
+Rfbb,Vishay-Dale,CRCW04022K49FKED,1,0.01,3,Resistance: 2.49 kΩ  Tolerance: 1.0%  Power: 63 mW  
+Rfbt,Vishay-Dale,CRCW040245K3FKED,1,0.01,3,Resistance: 45.3 kΩ  Tolerance: 1.0%  Power: 63 mW  
+Cout,TDK,C2012X5R1H475K125AB,1,0.12,6.75,Cap: 4.7 µF  Total Derated Cap: 1.4 µF  VDC: 50 V  ESR: 1 mΩ  Package: 0805  
+L1,Bourns,SRN6045-4R7Y,1,0.25,64,L: 4.7 µH  DCR: 37.6 mΩ  IDC: 3 A  
+Coutx,AVX,06033C104KAT2A,1,0.01,4.68,Cap: 100 nF  Total Derated Cap: 100 nF  VDC: 25 V  ESR: 50 mΩ  Package: 0603  
+Ccomp2,MuRata,GRM155R70J222KA01D,1,0.01,3,Cap: 2.2 nF  Total Derated Cap: 2.2 nF  VDC: 6.3 V  ESR: 1 mΩ  Package: 0402  
+D1,Fairchild Semiconductor,SS14FL,1,0.03,11.7,Type: Schottky  VRRM: 40 V  Io: 1 A  
+U1,Texas Instruments,LM51581RTER,1,1.595,16,
+Rcomp,Vishay-Dale,CRCW0402866RFKED,1,0.01,3,Resistance: 866 Ω  Tolerance: 1.0%  Power: 63 mW  
+Cbias,AVX,08053C104KAT2A,1,0.01,6.75,Cap: 100 nF  Total Derated Cap: 100 nF  VDC: 25 V  ESR: 280 mΩ  Package: 0805  
+Cvcc,Taiyo Yuden,EMK107B7105KA-T,1,0.01,4.68,Cap: 1 µF  Total Derated Cap: 1 µF  VDC: 16 V  ESR: 1 mΩ  Package: 0603  
+Css,MuRata,GRM155R71C123KA01D,1,0.01,3,Cap: 12 nF  Total Derated Cap: 12 nF  VDC: 16 V  ESR: 1 mΩ  Package: 0402  
+,,,,2.115,,

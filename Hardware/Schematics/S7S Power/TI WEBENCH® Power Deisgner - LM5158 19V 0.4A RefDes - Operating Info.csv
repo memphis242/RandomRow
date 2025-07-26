@@ -1,0 +1,41 @@
+﻿Name,Value,Category,Description
+Vout,19 V,System Information,Operational Output Voltage
+IC Tolerance,10 mV,IC,IC Feedback Tolerance
+Cin IRMS,100.21 mA,Capacitor,Input capacitor RMS ripple current
+Cin Pd,90.37 µW,Capacitor,Input capacitor power dissipation
+Cout IRMS,973.08 mA,Capacitor,Output capacitor RMS ripple current
+Cout Pd,2.84 mW,Capacitor,Output capacitor power dissipation
+D1 Tj,30 °C,Diode,D1 junction temperature
+Diode Pd,1.57 W,Diode,Diode power dissipation
+L Ipp,347.13 mA,Inductor,Peak-to-peak inductor ripple current
+Ipp percentage,9.54%,Inductor,Inductor ripple current percentage (with respect to average inductor current)
+L Pd,126.18 mW,Inductor,Inductor power dissipation
+Duty Cycle,85.53%,System Information,Duty cycle
+Efficiency,65.3%,System Information,Steady state efficiency
+Frequency,1.1 MHz,System Information,Switching frequency
+IC Tj,68.17 °C,IC,IC junction temperature
+IC Pd,2.33 W,IC,IC power dissipation
+Pout,7.6 W,System Information,Total output power
+Iin Avg,3.64 A,IC,Average input current
+IC Ipk,2.94 A,IC,Peak switch current in IC
+Mode,CCM,System Information,Conduction Mode
+Vout p-p,104.03 mV,System Information,Peak-to-peak output ripple voltage
+Vin p-p,22.42 mV,System Information,Input Source ripple voltage
+Phase Marg,52.41 °,System Information,Bode Plot Phase Margin
+Cross Freq,6.69 kHz,System Information,Bode plot crossover frequency
+Low Freq Gain,79.98 dB,System Information,Gain at 1Hz
+Gain Marg,-12.64 dB,System Information,Bode Plot Gain Margin
+ICThetaJA Effective,16.38 °C/W,IC,Effective IC Junction-to-Ambient Thermal Resistance
+FootPrint,221 mm²,System Information,Total Foot Print Area of BOM components
+Vout Actual,19.19 V,System Information,Vout Actual calculated based on selected voltage divider resistors
+Vout Tolerance,2.93%,System Information,Vout Tolerance based on IC Tolerance (no load) and voltage divider resistors if applicable
+Vin,3.2 V,System Information,Vin operating point
+Iout,400 mA,System Information,Iout operating point
+Cin Pd,90.37 µW,Power,Input capacitor power dissipation
+Cout Pd,2.84 mW,Power,Output capacitor power dissipation
+Diode Pd,1.57 W,Power,Diode power dissipation
+L Pd,126.18 mW,Power,Inductor power dissipation
+IC Pd,2.33 W,Power,IC power dissipation
+Total BOM,$2.46,System Information,Total BOM Cost
+Total Pd,4.04 W,Power,Total Power Dissipation
+BOM Count,15 ,System Information,Total Design BOM count

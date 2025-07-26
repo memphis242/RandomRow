@@ -1,0 +1,17 @@
+﻿Part,Manufacturer,Part Number,Quantity,Price ($),Footprint (mm²),Description
+Rt,Vishay-Dale,CRCW040219K1FKED,1,0.01,3,Resistance: 19.1 kΩ  Tolerance: 1.0%  Power: 63 mW  
+Ccomp,MuRata,GRM155R71A563KA01D,1,0.01,3,Cap: 56 nF  Total Derated Cap: 56 nF  VDC: 10 V  ESR: 1 mΩ  Package: 0402  
+Cin,MuRata,GRM188R71A225KE15D,1,0.02,4.68,Cap: 2.2 µF  Total Derated Cap: 1.8 µF  VDC: 10 V  ESR: 9 mΩ  Package: 0603  
+Rfbb,Vishay-Dale,CRCW04022K49FKED,1,0.01,3,Resistance: 2.49 kΩ  Tolerance: 1.0%  Power: 63 mW  
+Rfbt,Vishay-Dale,CRCW040245K3FKED,1,0.01,3,Resistance: 45.3 kΩ  Tolerance: 1.0%  Power: 63 mW  
+L1,Bourns,SRU1038-6R2Y,1,0.49,144,L: 6.2 µH  DCR: 16.5 mΩ  IDC: 4 A  
+Cbias,AVX,08053C104KAT2A,1,0.01,6.75,Cap: 100 nF  Total Derated Cap: 100 nF  VDC: 25 V  ESR: 280 mΩ  Package: 0805  
+Cout,MuRata,GRM31CR71H475KA12L,1,0.1,10.92,Cap: 4.7 µF  Total Derated Cap: 3.2 µF  VDC: 50 V  ESR: 3 mΩ  Package: 2220  
+Coutx,AVX,06033C104KAT2A,1,0.01,4.68,Cap: 100 nF  Total Derated Cap: 100 nF  VDC: 25 V  ESR: 50 mΩ  Package: 0603  
+Ccomp2,MuRata,GRM155R71E682KA01D,1,0.01,3,Cap: 6.8 nF  Total Derated Cap: 6.8 nF  VDC: 25 V  ESR: 1 mΩ  Package: 0402  
+D1,Torex USA Corporation,XBS104S13R-G,1,0.16,8.7,Type: Schottky  VRRM: 40 V  Io: 1 A  
+U1,Texas Instruments,LM5158RTER,1,1.595,16,
+Cvcc,Taiyo Yuden,EMK107B7105KA-T,1,0.01,4.68,Cap: 1 µF  Total Derated Cap: 1 µF  VDC: 16 V  ESR: 1 mΩ  Package: 0603  
+Css,MuRata,GRM155R71C123KA01D,1,0.01,3,Cap: 12 nF  Total Derated Cap: 12 nF  VDC: 16 V  ESR: 1 mΩ  Package: 0402  
+Rcomp,Vishay-Dale,CRCW0402768RFKED,1,0.01,3,Resistance: 768 Ω  Tolerance: 1.0%  Power: 63 mW  
+,,,,2.465,,

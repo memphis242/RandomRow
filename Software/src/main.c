@@ -8,9 +8,9 @@
  */
 
 /* File Inclusions */
-#include <stdbool.h>
-#include <stdint.h>
-#include <assert.h>
+#include <cstdint>
+#include <cassert>
+#include <limits>
 
 #include "main_config.h"
 #include "mcu_hal.h"
@@ -23,14 +23,22 @@
 #include "diagnostics.h"
 #include "generic_timer.h"
 
-/* Local Macro Definitions */
-#define MAX_INIT_ATTEMPTS UINT8_MAX
-
-// Constant-like macros
-
-// Function-like macros
+/* Local Constants */
+constexpr std::size_t MAX_INIT_ATTEMPTS = std::numeric_limits<std::uint8_t>::max();
 
 /* Local Datatypes */
+enum class MainFSM
+{
+   Init,
+   GenerateRandomNumber,
+   DisplayRandomNumber,
+   StoreRandomNumber,
+   ReconfigureRandomNumberRange,
+   Idle,
+   Sleep,
+   SevereFault
+};
+
 
 /* Local Data */
 
@@ -71,22 +79,11 @@ int main(void)
 
    /* Local Persistent Data */
    static bool NewNumGenerated = false;
+   MainFSM MainState = MainFSM::Init;
 
    /* Local Auto-Data */
    /* (basically persistent though, because we'll be in the while(1) inf loop) */
    uint16_t random_num = 0;
-
-   static enum MainFSM_E
-   {
-      Init,
-      GenerateRandomNumber,
-      DisplayRandomNumber,
-      StoreRandomNumber,
-      ReconfigureRandomNumberRange,
-      Idle,
-      Sleep,
-      SevereFault
-   } MainFSM = Init;
 
    /* Core Logic */
    while(1)

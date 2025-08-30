@@ -8,23 +8,24 @@
  */
 
 /* File Inclusions */
-#include <stdbool.h>
-#include <stdint.h>
-#include <assert.h>
+#include <cstdint>
+#include <limits>
+#include <assert>
 
 #include "main_config.h"
-#include "mcu_hal.h"
-#include "rng.h"
-#include "rntracker.h"
-#include "display.h"
-#include "inputdriver.h"
-#include "outputdriver.h"
-#include "nvm.h"
-#include "diagnostics.h"
-#include "generic_timer.h"
+
+#include "hal.hpp"
+#include "rng.hpp"
+#include "rntracker.hpp"
+#include "display.hpp"
+#include "inputdriver.hpp"
+#include "outputdriver.hpp"
+#include "nvm.hpp"
+#include "diagnostics.hpp"
+#include "generic_timer.hpp"
 
 /* Local Macro Definitions */
-#define MAX_INIT_ATTEMPTS UINT8_MAX
+constexpr std::uint8_t MAX_INIT_ATTEMPTS = std::numeric_limits<std::uint8_t>::max();
 
 // Constant-like macros
 
@@ -39,35 +40,59 @@
 /* Main Logic */
 int main(void)
 {
+
    /* Initialization */
-   // Hardware
-   MCU_Init();
-   RNG_Init();
-   Display_HardwareInit();
-   InputDriver_HardwareInit();
-   UXButton_Init();
-   OutputDriver_Init();
-   NVM_Init();
 
-   // Software
-   Diagniostics_Init();
+   // Base Hardware
+   HAL::PowerModes::Set( HAL::PowerModes::NormalRuntime /* TODO */ );
+   HAL::Clock fcpu(1'000'000);
+   HAL::SPI spi_nvm( // FYI: "nvm" == "non-volatile memory" (i.e., EEPROM, FRAM, FEE, ...)
+               HAL::SPI::Ports::SPI1,
+               100'000, // SCK rate
+               HAL::GPIO(  // CS
+                     HAL::GPIO::Direction::Out,
+                     HAL::GPIO::Ports::D1
+                     /* TODO */
+                  ),
+               /* TODO */
+            );
+   HAL::Timer tmrGoToSleep(
+         HAL::Timer::Units::ms,
+         std::numeric_limits<std::uint16_t>::max()
+      );
 
-   RandomNumberTracker_Init();
-   uint16_t min = RandomNumberTracker_RangeGetMin();
-   uint16_t max = RandomNumberTracker_RangeGetMax();
-   RNG_SetRange(min, max);
+   // Middleware
+   Middleware::RNG rng(Middleware::RNG::TRNG);
+   Middleware::OutputDriver::Init(/* TODO */);
+   Middleware::NVM nvm(spi_nvm);
 
-   static Timer_T Timer_RNGDebounce;
-   static Timer_T Timer_GoToSleep;
-   // Initialize local timers
-   Timer_Init( &Timer_RNGDebounce, Timer_ms, UINT16_MAX );
-   Timer_Init( &Timer_GoToSleep,   Timer_ms, UINT16_MAX );
+   // External Devices
+   Devices::UXButton genButton(
+               Middleware::InputDriver(
+                     Middleware::InputDriver::Types::Digital,
+                     HAL::GPIO(
+                           HAL::GPIO::Direction::In,
+                           HAL::GPIO::Ports::A5
+                           /* TODO */
+                        )
+                     ),
+               200 // ms, debounce time
+         );
+   Devices::Display display( /* TODO */ );
+   Devices::Knob knobAdjRngs(
+               Middleware::InputDriver(
+                     Middleware::InputDriver::Types::Analog,
+                     HAL::ADC(
+                           HAL::ADC::Ports::ADC1
+                           /* TODO */
+                        )
+                     ),
+         );
 
-   Input_T knob;
-   InputDriver_Init( &knob,
-                     InputDriver_Category_Analog,
-                     InputDriver_Unit_Percent,
-                     KNOB_PORT );
+   // Internal Software Modules
+   Diagnostics diagnostics();
+   RNT rnt();
+   rng.setRange(rnt.min(), rnt.max());
 
    /* Local Persistent Data */
    static bool NewNumGenerated = false;
@@ -76,7 +101,7 @@ int main(void)
    /* (basically persistent though, because we'll be in the while(1) inf loop) */
    uint16_t random_num = 0;
 
-   static enum MainFSM_E
+   enum MainFSM_E
    {
       Init,
       GenerateRandomNumber,
@@ -88,7 +113,7 @@ int main(void)
       SevereFault
    } MainFSM = Init;
 
-   /* Core Logic */
+   /* Superloop */
    while(1)
    {
       Diagnostics_Check();
@@ -116,7 +141,6 @@ int main(void)
          /*********************************************************************/
          case GenerateRandomNumber:
 
-            Timer_RNGDebounce = 0;
             do { random_num = RNG_GetRandomNum(); }
             while ( RandomNumberTracker_AlreadyUsed(random_num) );
             NewNumGenerated = true;
@@ -252,8 +276,7 @@ int main(void)
             // Fallthrough
          default:
 
-            if ( !UXButton_Held() && button_pressed &&
-                 (Timer_GetTime(&Timer_RNGDebounce) >= RERUN_RNG_DEBOUNCE_TIME) )
+            if ( !UXButton_Held() && button_pressed )
             {
                MainFSM = GenerateRandomNumber;
             }
@@ -272,8 +295,6 @@ int main(void)
 
             break;
       }
-
-      Timer_Increment(&Timer_RNGDebounce);
 
 #ifdef DESKTOP_ENV
       // TODO: Exit while(1) infinite loop

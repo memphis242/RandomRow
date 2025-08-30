@@ -10,7 +10,7 @@
 /* File Inclusions */
 #include <cstdint>
 #include <limits>
-#include <assert>
+#include <cassert>
 
 #include "main_config.h"
 
@@ -32,6 +32,18 @@ constexpr std::uint8_t MAX_INIT_ATTEMPTS = std::numeric_limits<std::uint8_t>::ma
 // Function-like macros
 
 /* Local Datatypes */
+enum class MainFSM
+{
+   Init,
+   GenerateRandomNumber,
+   DisplayRandomNumber,
+   StoreRandomNumber,
+   ReconfigureRandomNumberRange,
+   Idle,
+   Sleep,
+   SevereFault
+};
+
 
 /* Local Data */
 
@@ -96,24 +108,13 @@ int main(void)
 
    /* Local Persistent Data */
    static bool NewNumGenerated = false;
+   MainFSM MainState = MainFSM::Init;
 
    /* Local Auto-Data */
    /* (basically persistent though, because we'll be in the while(1) inf loop) */
    uint16_t random_num = 0;
 
-   enum MainFSM_E
-   {
-      Init,
-      GenerateRandomNumber,
-      DisplayRandomNumber,
-      StoreRandomNumber,
-      ReconfigureRandomNumberRange,
-      Idle,
-      Sleep,
-      SevereFault
-   } MainFSM = Init;
-
-   /* Superloop */
+   /* Core Logic */
    while(1)
    {
       Diagnostics_Check();

@@ -1,25 +1,22 @@
 /**
- * @file main_config.h
- * @brief Configuration macros to configure the top-level software parameters
- *        of the RandomRow.
+ * @file main_config.hpp
+ * @brief Configuration of the top-level software parameters of the RandomRow.
  * 
- * @note Comment/uncomment the macros present here to change which sections of
- *       code are visible to the compiler.
- *
- * @author Abdulla Almosalami (memphis242)
+ * @author Abdulla Almosalami (@memphis242)
  * @date June 03, 2025
  * @copyright MIT License
  */
+#pragma once
 
-#ifndef MAIN_CFG_H_
-#define MAIN_CFG_H_
+#include "types.hpp"
 
-/* Public Macro Definitions */
+/* Public constexpr Definitions */
 
-#define RERUN_RNG_DEBOUNCE_TIME  5000 // ms
-#define GO_TO_SLEEP_WAIT_TIME    1000 // ms
-#define SLEEP_CYCLE_TIME         1000 // ms
+namespace RandomRow::Cfg
+{
+   constexpr ms_t RERUN_RNG_DEBOUNCE_TIME = 5000;
+   constexpr ms_t GO_TO_SLEEP_WAIT_TIME   = 1000;
+   constexpr ms_t SLEEP_CYCLE_TIME        = 1000;
+};
 
-#define KNOB_PORT TODO
-
-#endif // MAIN_CFG_H_
+// #define KNOB_PORT TODO

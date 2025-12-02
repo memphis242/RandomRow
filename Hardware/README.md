@@ -1,55 +1,8 @@
-# Hardware Requirements Document
-This requirements document specified hardware details that are a layer lower than the system level requirements. This includes:
-- Output signal specifications in addition to the specifications of the [System Requirements document](../../SystemArchitecture/Requirements/SystemRequirements.md)
-- Component selection
-- Hardware ports
-- Device enclosure
+# Hardware Description
 
-## Terminology
-In addition to the terminology introduced by the [System Requirements document](../../SystemArchitecture/SystemRequirements.md), here is more terminology scoped to this document.
-1. **Height**: Looking at the face of the device with the screen, the height is the vertical dimension
-1. **Width**: Looking at the face of the device with the screen, the width is the horizontal dimension
-1. **Depth**: How high the device comes off a flat surface if the face of the device with the screen is facing up
-1. **Unwanted Signal Overlay**: Any signal on top of the ideal square waveform that is undersired (noise, ripple)
-1. **Device Efficiency**: The ratio between the power to a 100Ω load and the power supplied by the device's battery, expressed as a percentage %
-1. **Worst-Case Device Efficiency**: The device efficiency under conditions that cause maximum losses (conditions TBD)
-
-## Requirements
-1. `HRD_01`: The device shall be within ± 10% of these dimensions:
-   - Height: TODO
-   - Width: TODO  
-   - Depth: TODO  
-1. `HRD_02`: The device's output shall be single-ended.
-1. `HRD_03`: (FUTURE) Differential outputs shall be supported.
-1. `HRD_04`: To fulfill `UI_TBD`, the following shall be the output ports for this device:
-   - `HRD_04A`: a BNC port (receptable) where the outer shell is connected to ground and the inner line is connected to the output signal
-   - `HRD_04B`: a 0.1" pin header pair (ground + signal)
-   - `HRD_04C`: two banana plug receptacles (ground + signal)
-1. `HRD_05`: The device shall be powered by a single standard ANSI 1604A (IEC 6LR61) 9V alkaline battery.
-   - :scroll: Rough rule of thumb is at 2mA, you'll last 2 weeks. See example [DURACELL PLUS MN1604 datasheet](https://www.duracell.com/wp-content/uploads/2020/02/9V-Duracell-Plus.pdf).
-1. `HRD_06`: (FUTURE) The device shall support being powered via USB C.
-1. `HRD_07`: The device shall have a 3V backup 2032 battery to support graceful shutdown.
-1. `HRD_08`: The display shall have 10mm bevels above and below it.
-1. `HRD_09`: The display shall be on the left half of the device.
-1. `HRD_10`: The display's right edge shall be at 60% ± 5% of the device's width.
-   - _Rationale_: This is approximately the golden ratio φ divided by 1 + φ
-1. `HRD_11`: The output ports for the device shall be on the left, right, or top face of the device.
-1. `HRD_12`: The output enabled LED shall be on the same face as the output ports.
-1. `HRD_13`: The SetPot shall be support > 2 full turns.
-1. `HRD_14`: The SetPot shall have a metal knurled knob.
-1. `HRD_15`: The SetPot shall a diameter ≥ 60% of the height of the display.
-1. `HRD_16`: The enable switch shall be a slide switch.
-1. `HRD_17`: When driving a 10kΩ _resistive_ load to ground, the device shall have a rise and fall time of no greater than 10% of the **Maximum Frequency`'s period.
-1. `HRD_18`: The device shall have a 100Ω ± 10% output impedance throughout its rated frequency range.
-1. `HRD_19`: The device must be able to operate in typical indoor office conditions:   
-   - `HRD_19A`: 10°C to 50°C ambient temperature   
-   - `HRD_19B`: 30% to 60% relative humidity
-1. `HRD_20`: The output signal shall have ≤ ±1mV of **unwanted signal overlay** on top of the base square waveform across its rated frequency range and output load range.
-1. `HRD_21`: The worst-case device efficiency shall be ≥ 80%.
-1. `HRD_22`: There shall be an on-board LED for each voltage rail that indicates the rail's voltage is within ±50% of its expected level.
-   - `HRD_22A`: These LEDs are hidden from the user.
-1. `HRD_23`: There shall be an on-board LED that is blinked at a 1Hz rate after software boot-up that helps indicate that software is generally operating normally.
-   - Justification: The software shall drive this LED in a separate task and place this task at a low priority. If the LED blinks, this means the task is executing and it may be inferred that tasks at a higher priority must have completed execution as well.
+## High-Level Requirements
+1. This device shall last a year on a single AA battery
+2. TODO
 
 ## Physical I/O
 ### Inputs
@@ -71,7 +24,7 @@ To meet the above requirements, the following components have been selected.
 
 ### Electronic
 #### MCU
-:scroll: Different MCUs will be supported in order to diversify this critical component.   
+:scroll: Different MCUs will be supported in order to diversify this critical component (and just for fun!).   
 :scroll: Low-power MCUs are prioritized.   
 :scroll: Based on the general I/O requirements, we're looking at a < 48 pin count unit   
 :scroll: Arm® Cortex®-M0+ MCUs out-perform 8-bit / 16-bit low power MCUs (e.g., STM8L, MSP430FR2x) in ultra-low-power performance!😲   
